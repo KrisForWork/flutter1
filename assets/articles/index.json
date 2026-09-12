@@ -1,0 +1,32 @@
+{
+  "articles": [
+    "01_unit_testing.json",
+    "02_widget_tests_flutter.json",
+    "03_manual_checklist.json",
+    "04_client_load.json",
+    "05_selenium.json",
+    "06_postman.json",
+    "07_jmeter.json",
+    "08_k6.json",
+    "09_testrail.json",
+    "10_jira.json",
+    "11_appium.json",
+    "12_exploratory.json",
+    "13_test_pyramid.json",
+    "14_ci_flutter.json",
+    "15_mocks.json",
+    "16_smoke.json",
+    "17_regression.json",
+    "18_allure.json",
+    "19_devtools.json",
+    "20_equivalence.json",
+    "21_boundary.json",
+    "22_pact.json",
+    "23_bug_report.json",
+    "24_manual_testing_type.json",
+    "25_automated_testing_type.json",
+    "26_load_testing_type.json",
+    "27_functional_testing_type.json",
+    "28_integration_testing_type.json"
+  ]
+}
