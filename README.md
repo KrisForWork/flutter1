@@ -183,5 +183,3 @@ test1/
 | `add_entry_form.dart` | форма новой записи |
 | `student_footer.dart` | ФИО и группа |
 | `widget_keys.dart` | стабильные ключи для тестов |
-
-Документация по тестированию и отчёту: папка `docs/` (`PLAN_PRACTICAL_02.md`, `REPORT.md`, `manual/`, `auto/`, `load/`).
