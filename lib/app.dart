@@ -1,6 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'data/auth_store.dart';
+import 'pages/login_page.dart';
+import 'pages/profile_page.dart';
+
 /// Один экран: заголовок темы, горизонтальный и вертикальный ListView.
 class DirectoryApp extends StatelessWidget {
   const DirectoryApp({super.key});
@@ -59,22 +63,28 @@ class DirectoryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: appTitle,
-      debugShowCheckedModeBanner: false,
-      // Web: мышь и трекпад должны уметь скроллить ListView.
-      scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.trackpad,
-        },
-      ),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
-      home: const _HomePage(),
+    return ValueListenableBuilder<bool>(
+      valueListenable: AuthStore.loggedIn,
+      builder: (_, isLoggedIn, _) {
+        return MaterialApp(
+          key: ValueKey(isLoggedIn),
+          title: appTitle,
+          debugShowCheckedModeBanner: false,
+          // Web: мышь и трекпад должны уметь скроллить ListView.
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+            },
+          ),
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+            useMaterial3: true,
+          ),
+          home: isLoggedIn ? const _HomePage() : const LoginPage(),
+        );
+      },
     );
   }
 }
@@ -186,51 +196,64 @@ class _HomePage extends StatelessWidget {
             Material(
               elevation: 8,
               color: scheme.surfaceContainerHighest,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                child: Row(
-                  children: [
-                    ClipOval(
-                      child: Image.asset(
-                        DirectoryApp.profileAsset,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => CircleAvatar(
-                          radius: 24,
-                          backgroundColor: scheme.primaryContainer,
-                          child: Icon(
-                            Icons.person,
-                            color: scheme.onPrimaryContainer,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProfilePage()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Image.asset(
+                          DirectoryApp.profileAsset,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => CircleAvatar(
+                            radius: 24,
+                            backgroundColor: scheme.primaryContainer,
+                            child: Icon(
+                              Icons.person,
+                              color: scheme.onPrimaryContainer,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            DirectoryApp.studentName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ValueListenableBuilder<AppUser?>(
+                              valueListenable: AuthStore.session,
+                              builder: (_, user, _) {
+                                return Text(
+                                  user?.name ?? DirectoryApp.studentName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Группа ${DirectoryApp.studentGroup}',
-                            style: TextStyle(fontSize: 13),
-                          ),
-                        ],
+                            const SizedBox(height: 2),
+                            const Text(
+                              'Группа ${DirectoryApp.studentGroup}',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
