@@ -78,8 +78,14 @@ class DirectoryApp extends StatelessWidget {
             },
           ),
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
             useMaterial3: true,
+            scaffoldBackgroundColor: Colors.white,
+            colorScheme: const ColorScheme.light(
+              primary: Colors.black,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
           ),
           home: isLoggedIn ? const _HomePage() : const LoginPage(),
         );
@@ -93,15 +99,14 @@ class _HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const ColoredBox(
-              color: Color(0xFF8BE87A),
+      backgroundColor: const Color(0xFFEEEEEE),
+      body: Column(
+        children: [
+          const ColoredBox(
+            color: Colors.white,
+            child: SafeArea(
+              bottom: false,
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -111,90 +116,122 @@ class _HomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF143816),
+                      color: Colors.black,
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _InfoBox(
-                child: Text(
-                  DirectoryApp.topicTitle,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _InfoBox(
-                child: Text(
-                  DirectoryApp.testingItems.map((item) => item.$2).join(' · '),
-                  style: textTheme.bodyMedium,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _InfoBox(
-                child: Text(
-                  DirectoryApp.topicDescription,
-                  style: textTheme.bodyMedium,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            const SizedBox(height: 140, child: _HorizontalImages()),
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                itemCount: DirectoryApp.testingItems.length,
-                itemBuilder: (context, index) {
-                  final item = DirectoryApp.testingItems[index];
-                  return Card(
-                    child: ListTile(
-                      leading: Icon(item.$1),
-                      title: Text(
-                        item.$2,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: ColoredBox(
+              color: const Color(0xFFEEEEEE),
+              child: Column(
+              children: [
+                const SizedBox(height: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: _InfoBox(
+                    child: Text(
+                      DirectoryApp.topicTitle,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
                       ),
-                      subtitle: Text(item.$3),
-                      onTap: () {
-                        final height = MediaQuery.sizeOf(context).height;
-                        ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                item.$2,
-                                style: const TextStyle(color: Color(0xFF143816)),
-                              ),
-                              backgroundColor: const Color(0xFF8BE87A),
-                              behavior: SnackBarBehavior.floating,
-                              dismissDirection: DismissDirection.up,
-                              margin: EdgeInsets.only(
-                                left: 16,
-                                right: 16,
-                                bottom: (height - 100).clamp(8.0, height - 8),
-                              ),
-                            ),
-                          );
-                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _InfoBox(
+                    child: Text(
+                      DirectoryApp.testingItems.map((item) => item.$2).join(' · '),
+                      style: const TextStyle(fontSize: 14, color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: _InfoBox(
+                    child: Text(
+                      DirectoryApp.topicDescription,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        height: 1.35,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const SizedBox(height: 140, child: _HorizontalImages()),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    itemCount: DirectoryApp.testingItems.length,
+                    itemBuilder: (context, index) {
+                      final item = DirectoryApp.testingItems[index];
+                      return Card(
+                        color: Colors.white,
+                        elevation: 0,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 4,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: ListTile(
+                          leading: Icon(item.$1, color: Colors.black),
+                          title: Text(
+                            item.$2,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          subtitle: Text(
+                            item.$3,
+                            style: const TextStyle(color: Colors.black87),
+                          ),
+                          onTap: () {
+                            final height = MediaQuery.sizeOf(context).height;
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    item.$2,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.black,
+                                  behavior: SnackBarBehavior.floating,
+                                  dismissDirection: DismissDirection.up,
+                                  margin: EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    bottom: (height - 100).clamp(8.0, height - 8),
+                                  ),
+                                ),
+                              );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            Material(
-              elevation: 8,
-              color: scheme.surfaceContainerHighest,
+            ),
+          ),
+          ColoredBox(
+            color: Colors.white,
+            child: SafeArea(
+              top: false,
               child: InkWell(
                 onTap: () {
                   Navigator.push(
@@ -230,6 +267,7 @@ class _HomePage extends StatelessWidget {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
+                                    color: Colors.black,
                                   ),
                                 );
                               },
@@ -237,7 +275,7 @@ class _HomePage extends StatelessWidget {
                             const SizedBox(height: 2),
                             const Text(
                               'Группа ${DirectoryApp.studentGroup}',
-                              style: TextStyle(fontSize: 13),
+                              style: TextStyle(fontSize: 13, color: Colors.black),
                             ),
                           ],
                         ),
@@ -247,8 +285,8 @@ class _HomePage extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -272,8 +310,6 @@ class _HorizontalImagesState extends State<_HorizontalImages> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
     return Listener(
       onPointerSignal: (event) {
         if (event is! PointerScrollEvent || !_controller.hasClients) return;
@@ -294,16 +330,16 @@ class _HorizontalImagesState extends State<_HorizontalImages> {
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               child: Image.asset(
                 DirectoryApp.topicImages[index],
                 width: 200,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => ColoredBox(
-                  color: scheme.secondaryContainer,
-                  child: const SizedBox(
+                errorBuilder: (_, _, _) => const ColoredBox(
+                  color: Color(0xFFEEEEEE),
+                  child: SizedBox(
                     width: 200,
-                    child: Icon(Icons.image_not_supported),
+                    child: Icon(Icons.image_not_supported, color: Colors.black),
                   ),
                 ),
               ),
@@ -322,15 +358,12 @@ class _InfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: scheme.outlineVariant),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: child,
     );

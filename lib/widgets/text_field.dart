@@ -74,10 +74,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return null;
   }
 
-  OutlineInputBorder _border() {
+  OutlineInputBorder _border({Color color = Colors.black}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(30),
-      borderSide: const BorderSide(color: Colors.black),
+      borderSide: BorderSide(color: color),
+      gapPadding: 0,
     );
   }
 
@@ -103,6 +104,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       },
       decoration: InputDecoration(
         hintText: widget.hint,
+        hintMaxLines: 1,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
         prefixIcon: Icon(_prefixIcon, color: Colors.black54),
         suffixIcon: _isPassword
             ? IconButton(
@@ -119,9 +122,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
           horizontal: 16,
           vertical: 14,
         ),
+        errorMaxLines: 2,
+        filled: true,
+        fillColor: Colors.white,
         border: _border(),
         enabledBorder: _border(),
         focusedBorder: _border(),
+        errorBorder: _border(color: Colors.red),
+        focusedErrorBorder: _border(color: Colors.red),
       ),
     );
   }
