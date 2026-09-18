@@ -20,17 +20,23 @@ class DirectoryApp extends StatelessWidget {
       'Выбор типа зависит от цели проверки и этапа разработки.';
 
   static const testingTypes = <String>[
-    'Ручное тестирование',
-    'Автоматизированное тестирование',
-    'Нагрузочное тестирование',
-    'Функциональное тестирование',
-    'Интеграционное тестирование',
+    'Ручное',
+    'Автоматизированное',
+    'Нагрузочное',
+    'Функциональное',
+    'Интеграционное',
   ];
 
   static const studentName = 'Ильичева Кристина Олеговна';
   static const studentGroup = 'ИКБО-60-23';
   static const profileAsset = 'assets/images/profile.png';
-  static const topicImageAsset = 'assets/images/article_checklist.png';
+  static const topicImages = <String>[
+    'assets/images/type_manual.png',
+    'assets/images/type_automated.png',
+    'assets/images/type_load.png',
+    'assets/images/type_functional.png',
+    'assets/images/type_integration.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +52,29 @@ class DirectoryApp extends StatelessWidget {
   }
 }
 
-class _HomePage extends StatelessWidget {
+class _HomePage extends StatefulWidget {
   const _HomePage();
+
+  @override
+  State<_HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<_HomePage> {
+  int _imageIndex = 0;
+
+  void _nextImage() {
+    setState(() {
+      _imageIndex = (_imageIndex + 1) % DirectoryApp.topicImages.length;
+    });
+  }
+
+  void _prevImage() {
+    setState(() {
+      _imageIndex =
+          (_imageIndex - 1 + DirectoryApp.topicImages.length) %
+          DirectoryApp.topicImages.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,50 +128,80 @@ class _HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            // Картинка + список типов (одна высота)
+            // Картинка + список типов
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      width: 110,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          DirectoryApp.topicImageAsset,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => ColoredBox(
-                            color: scheme.secondaryContainer,
-                            child: const Center(
-                              child: Icon(Icons.image_not_supported),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _InfoBox(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            for (final type in DirectoryApp.testingTypes)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Text(
-                                  '• $type',
-                                  style: textTheme.bodyMedium,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          GestureDetector(
+                            onTap: _nextImage,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                DirectoryApp.topicImages[_imageIndex],
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => ColoredBox(
+                                  color: scheme.secondaryContainer,
+                                  child: const Center(
+                                    child: Icon(Icons.image_not_supported),
+                                  ),
                                 ),
                               ),
-                          ],
-                        ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              onPressed: _prevImage,
+                              style: IconButton.styleFrom(
+                                backgroundColor: Colors.black12,
+                                foregroundColor: Colors.white,
+                              ),
+                              icon: const Icon(Icons.chevron_left),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              onPressed: _nextImage,
+                              style: IconButton.styleFrom(
+                                backgroundColor: Colors.black12,
+                                foregroundColor: Colors.white,
+                              ),
+                              icon: const Icon(Icons.chevron_right),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 160,
+                    child: _InfoBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final type in DirectoryApp.testingTypes)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Text(
+                                '• $type',
+                                style: textTheme.bodyMedium,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 12),
