@@ -18,7 +18,6 @@ class DirectoryApp extends StatelessWidget {
 
   static const studentName = 'Ильичева Кристина Олеговна';
   static const studentGroup = 'ИКБО-60-23';
-  static const profileAsset = 'assets/images/profile.png';
 
   static const topicImages = <String>[
     'assets/images/type_manual.png',
@@ -210,20 +209,11 @@ class _HomePage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      ClipOval(
-                        child: Image.asset(
-                          DirectoryApp.profileAsset,
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => CircleAvatar(
-                            radius: 24,
-                            backgroundColor: scheme.primaryContainer,
-                            child: Icon(
-                              Icons.person,
-                              color: scheme.onPrimaryContainer,
-                            ),
-                          ),
+                      ValueListenableBuilder<AppUser?>(
+                        valueListenable: AuthStore.session,
+                        builder: (_, user, _) => UserAvatar(
+                          size: 48,
+                          user: user,
                         ),
                       ),
                       const SizedBox(width: 12),

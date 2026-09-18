@@ -8,16 +8,29 @@ class AppUser {
     required this.name,
     required this.email,
     required this.password,
+    this.photoBase64,
   });
 
   String name;
   String email;
   String password;
+  String? photoBase64;
 
-  Map<String, String> toJson() => {
+  Uint8List? get photoBytes {
+    final data = photoBase64;
+    if (data == null || data.isEmpty) return null;
+    try {
+      return base64Decode(data);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
     'name': name,
     'email': email,
     'password': password,
+    'photoBase64': photoBase64,
   };
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -25,6 +38,7 @@ class AppUser {
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
       password: json['password'] as String? ?? '',
+      photoBase64: json['photoBase64'] as String?,
     );
   }
 }
@@ -46,22 +60,17 @@ class AuthStore {
     _users
       ..clear()
       ..addAll(_decodeUsers(prefs.getString(_usersKey)));
-
-    final email = prefs.getString(_sessionKey);
-    if (email == null) return;
-    for (final user in _users) {
-      if (user.email == email) {
-        session.value = user;
-        loggedIn.value = true;
-        return;
-      }
-    }
+    await prefs.remove(_sessionKey);
+    session.value = null;
+    loggedIn.value = false;
   }
 
-  static void _setUser(AppUser? user) {
+  static void _setUser(AppUser? user, {bool save = false}) {
     session.value = user;
     loggedIn.value = user != null;
-    _save();
+    if (save) {
+      _save();
+    }
   }
 
   static Future<void> _save() async {
@@ -70,12 +79,6 @@ class AuthStore {
       _usersKey,
       jsonEncode(_users.map((user) => user.toJson()).toList()),
     );
-    final email = session.value?.email;
-    if (email == null) {
-      await prefs.remove(_sessionKey);
-    } else {
-      await prefs.setString(_sessionKey, email);
-    }
   }
 
   static List<AppUser> _decodeUsers(String? raw) {
@@ -101,7 +104,7 @@ class AuthStore {
       password: password,
     );
     _users.add(user);
-    _setUser(user);
+    _setUser(user, save: true);
     return null;
   }
 
@@ -121,10 +124,15 @@ class AuthStore {
     return 'Пользователь не найден. Сначала зарегистрируйтесь';
   }
 
+  static void logout() {
+    _setUser(null);
+  }
+
   static void update({
     required String name,
     required String email,
     required String password,
+    String? photoBase64,
   }) {
     final user = session.value;
     if (user == null) return;
@@ -133,11 +141,23 @@ class AuthStore {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       password: password,
+      photoBase64: photoBase64 ?? user.photoBase64,
     );
     if (index >= 0) {
       _users[index] = updated;
     }
     session.value = updated;
     _save();
+  }
+
+  static void updatePhoto(String photoBase64) {
+    final user = session.value;
+    if (user == null) return;
+    update(
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      photoBase64: photoBase64,
+    );
   }
 }
