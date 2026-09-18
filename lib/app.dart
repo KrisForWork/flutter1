@@ -1,6 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-/// Простое приложение: один экран без скролла и переходов.
+/// Один экран: заголовок темы, горизонтальный и вертикальный ListView.
 class DirectoryApp extends StatelessWidget {
   const DirectoryApp({super.key});
 
@@ -11,25 +12,10 @@ class DirectoryApp extends StatelessWidget {
       'кто проверяет, что именно смотрят и с какой целью. '
       'Разные типы помогают найти разные ошибки.';
 
-  static const topicExtra =
-      'На практике типы комбинируют: сначала проверяют основные функции '
-      '(функциональное), затем смотрят, как части системы работают вместе '
-      '(интеграционное). Ручные проверки удобны для новых экранов и UX, '
-      'автотесты — для повторяемой регрессии, нагрузочные — чтобы понять, '
-      'как программа ведёт себя при большом объёме данных или запросов. '
-      'Выбор типа зависит от цели проверки и этапа разработки.';
-
-  static const testingTypes = <String>[
-    'Ручное',
-    'Автоматизированное',
-    'Нагрузочное',
-    'Функциональное',
-    'Интеграционное',
-  ];
-
   static const studentName = 'Ильичева Кристина Олеговна';
   static const studentGroup = 'ИКБО-60-23';
   static const profileAsset = 'assets/images/profile.png';
+
   static const topicImages = <String>[
     'assets/images/type_manual.png',
     'assets/images/type_automated.png',
@@ -38,11 +24,52 @@ class DirectoryApp extends StatelessWidget {
     'assets/images/type_integration.png',
   ];
 
+  static const testingItems = <(IconData, String, String)>[
+    (
+      Icons.checklist,
+      'Ручное',
+      'Человек проходит сценарии по чек-листу и смотрит, как ведёт себя приложение. '
+          'Удобно для новых экранов, UX и того, что автотесты не видят.',
+    ),
+    (
+      Icons.smart_toy,
+      'Автоматизированное',
+      'Код сам проверяет логику и интерфейс: unit-тесты — отдельные функции, '
+          'widget-тесты — экраны и кнопки. Подходит для повторяемой регрессии.',
+    ),
+    (
+      Icons.speed,
+      'Нагрузочное',
+      'Смотрят, как программа ведёт себя при большом объёме данных или операций. '
+          'Замеряют время, ищут тормоза списка и узкие места на клиенте.',
+    ),
+    (
+      Icons.task_alt,
+      'Функциональное',
+      'Проверяют, что функции работают по требованиям: поиск, фильтры, добавление. '
+          'Ответ на вопрос «делает ли программа то, что должна».',
+    ),
+    (
+      Icons.account_tree,
+      'Интеграционное',
+      'Проверяют, как части системы работают вместе: экран, состояние и данные. '
+          'Ошибка часто видна только на стыке модулей, а не в каждом по отдельности.',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: appTitle,
       debugShowCheckedModeBanner: false,
+      // Web: мышь и трекпад должны уметь скроллить ListView.
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.trackpad,
+        },
+      ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
@@ -52,29 +79,8 @@ class DirectoryApp extends StatelessWidget {
   }
 }
 
-class _HomePage extends StatefulWidget {
+class _HomePage extends StatelessWidget {
   const _HomePage();
-
-  @override
-  State<_HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<_HomePage> {
-  int _imageIndex = 0;
-
-  void _nextImage() {
-    setState(() {
-      _imageIndex = (_imageIndex + 1) % DirectoryApp.topicImages.length;
-    });
-  }
-
-  void _prevImage() {
-    setState(() {
-      _imageIndex =
-          (_imageIndex - 1 + DirectoryApp.topicImages.length) %
-          DirectoryApp.topicImages.length;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +91,6 @@ class _HomePageState extends State<_HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Полоса заголовка на всю ширину
             const ColoredBox(
               color: Color(0xFF8BE87A),
               child: SizedBox(
@@ -104,7 +109,6 @@ class _HomePageState extends State<_HomePage> {
               ),
             ),
             const SizedBox(height: 16),
-            // Название темы
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _InfoBox(
@@ -117,7 +121,16 @@ class _HomePageState extends State<_HomePage> {
               ),
             ),
             const SizedBox(height: 12),
-            // Краткое описание
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _InfoBox(
+                child: Text(
+                  DirectoryApp.testingItems.map((item) => item.$2).join(' · '),
+                  style: textTheme.bodyMedium,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _InfoBox(
@@ -128,102 +141,56 @@ class _HomePageState extends State<_HomePage> {
               ),
             ),
             const SizedBox(height: 12),
-            // Картинка + список типов (не выше 200)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                height: 200,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Positioned.fill(
-                            child: GestureDetector(
-                              onTap: _nextImage,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  DirectoryApp.topicImages[_imageIndex],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => ColoredBox(
-                                    color: scheme.secondaryContainer,
-                                    child: const Center(
-                                      child: Icon(Icons.image_not_supported),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: IconButton(
-                              onPressed: _prevImage,
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.black12,
-                                foregroundColor: Colors.white,
-                              ),
-                              icon: const Icon(Icons.chevron_left),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              onPressed: _nextImage,
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.black12,
-                                foregroundColor: Colors.white,
-                              ),
-                              icon: const Icon(Icons.chevron_right),
-                            ),
-                          ),
-                        ],
+            const SizedBox(height: 140, child: _HorizontalImages()),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                itemCount: DirectoryApp.testingItems.length,
+                itemBuilder: (context, index) {
+                  final item = DirectoryApp.testingItems[index];
+                  return Card(
+                    child: ListTile(
+                      leading: Icon(item.$1),
+                      title: Text(
+                        item.$2,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _InfoBox(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            for (final type in DirectoryApp.testingTypes)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Text(
-                                  '• $type',
-                                  style: textTheme.bodyMedium,
-                                ),
+                      subtitle: Text(item.$3),
+                      onTap: () {
+                        final height = MediaQuery.sizeOf(context).height;
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                item.$2,
+                                style: const TextStyle(color: Color(0xFF143816)),
                               ),
-                          ],
-                        ),
-                      ),
+                              backgroundColor: const Color(0xFF8BE87A),
+                              behavior: SnackBarBehavior.floating,
+                              dismissDirection: DismissDirection.up,
+                              margin: EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                                bottom: (height - 100).clamp(8.0, height - 8),
+                              ),
+                            ),
+                          );
+                      },
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 12),
-            // Продолжение информации — высота по тексту
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              child: _InfoBox(
-                child: Text(
-                  DirectoryApp.topicExtra,
-                  style: textTheme.bodyMedium,
-                ),
-              ),
-            ),
-            const Spacer(),
-            // Подвал: фото и ФИО
             Material(
               elevation: 8,
               color: scheme.surfaceContainerHighest,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 child: Row(
                   children: [
                     ClipOval(
@@ -243,22 +210,22 @@ class _HomePageState extends State<_HomePage> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Expanded(
+                    const Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             DirectoryApp.studentName,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text(
                             'Группа ${DirectoryApp.studentGroup}',
-                            style: const TextStyle(fontSize: 13),
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -269,6 +236,67 @@ class _HomePageState extends State<_HomePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HorizontalImages extends StatefulWidget {
+  const _HorizontalImages();
+
+  @override
+  State<_HorizontalImages> createState() => _HorizontalImagesState();
+}
+
+class _HorizontalImagesState extends State<_HorizontalImages> {
+  final _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Listener(
+      onPointerSignal: (event) {
+        if (event is! PointerScrollEvent || !_controller.hasClients) return;
+        final next =
+            (_controller.offset + event.scrollDelta.dy + event.scrollDelta.dx)
+                .clamp(
+                  _controller.position.minScrollExtent,
+                  _controller.position.maxScrollExtent,
+                );
+        _controller.jumpTo(next);
+      },
+      child: ListView.builder(
+        controller: _controller,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: DirectoryApp.topicImages.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                DirectoryApp.topicImages[index],
+                width: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => ColoredBox(
+                  color: scheme.secondaryContainer,
+                  child: const SizedBox(
+                    width: 200,
+                    child: Icon(Icons.image_not_supported),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
