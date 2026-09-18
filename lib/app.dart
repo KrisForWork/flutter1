@@ -128,29 +128,31 @@ class _HomePageState extends State<_HomePage> {
               ),
             ),
             const SizedBox(height: 12),
-            // Картинка + список типов
+            // Картинка + список типов (не выше 200)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 1,
+              child: SizedBox(
+                height: 200,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          GestureDetector(
-                            onTap: _nextImage,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                DirectoryApp.topicImages[_imageIndex],
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => ColoredBox(
-                                  color: scheme.secondaryContainer,
-                                  child: const Center(
-                                    child: Icon(Icons.image_not_supported),
+                          Positioned.fill(
+                            child: GestureDetector(
+                              onTap: _nextImage,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  DirectoryApp.topicImages[_imageIndex],
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) => ColoredBox(
+                                    color: scheme.secondaryContainer,
+                                    child: const Center(
+                                      child: Icon(Icons.image_not_supported),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -181,27 +183,27 @@ class _HomePageState extends State<_HomePage> {
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 160,
-                    child: _InfoBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (final type in DirectoryApp.testingTypes)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text(
-                                '• $type',
-                                style: textTheme.bodyMedium,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _InfoBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (final type in DirectoryApp.testingTypes)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  '• $type',
+                                  style: textTheme.bodyMedium,
+                                ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 12),
