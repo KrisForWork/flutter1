@@ -11,6 +11,14 @@ class DirectoryApp extends StatelessWidget {
       'кто проверяет, что именно смотрят и с какой целью. '
       'Разные типы помогают найти разные ошибки.';
 
+  static const topicExtra =
+      'На практике типы комбинируют: сначала проверяют основные функции '
+      '(функциональное), затем смотрят, как части системы работают вместе '
+      '(интеграционное). Ручные проверки удобны для новых экранов и UX, '
+      'автотесты — для повторяемой регрессии, нагрузочные — чтобы понять, '
+      'как программа ведёт себя при большом объёме данных или запросов. '
+      'Выбор типа зависит от цели проверки и этапа разработки.';
+
   static const testingTypes = <String>[
     'Ручное тестирование',
     'Автоматизированное тестирование',
@@ -51,17 +59,18 @@ class _HomePage extends StatelessWidget {
         child: Column(
           children: [
             // Полоса заголовка на всю ширину
-            Material(
-              color: scheme.primaryContainer,
+            const ColoredBox(
+              color: Color(0xFF8BE87A),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: Center(
                   child: Text(
                     DirectoryApp.appTitle,
-                    style: textTheme.titleLarge?.copyWith(
+                    style: TextStyle(
+                      fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: scheme.onPrimaryContainer,
+                      color: Color(0xFF143816),
                     ),
                   ),
                 ),
@@ -92,44 +101,61 @@ class _HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            // Картинка + список типов
+            // Картинка + список типов (одна высота)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      DirectoryApp.topicImageAsset,
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
                       width: 110,
-                      height: 110,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => Container(
-                        width: 110,
-                        height: 110,
-                        color: scheme.secondaryContainer,
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.image_not_supported),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _InfoBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (final type in DirectoryApp.testingTypes)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text('• $type', style: textTheme.bodyMedium),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          DirectoryApp.topicImageAsset,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => ColoredBox(
+                            color: scheme.secondaryContainer,
+                            child: const Center(
+                              child: Icon(Icons.image_not_supported),
                             ),
-                        ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _InfoBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (final type in DirectoryApp.testingTypes)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  '• $type',
+                                  style: textTheme.bodyMedium,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Продолжение информации — высота по тексту
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: _InfoBox(
+                child: Text(
+                  DirectoryApp.topicExtra,
+                  style: textTheme.bodyMedium,
+                ),
               ),
             ),
             const Spacer(),
