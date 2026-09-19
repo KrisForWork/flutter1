@@ -91,8 +91,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             const Text(
                               'Регистрация',
                               style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Pacifico',
+                                fontSize: 32,
                               ),
                             ),
                             const SizedBox(height: 28),

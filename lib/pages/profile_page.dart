@@ -148,7 +148,10 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         title: const Text(
           'Профиль',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: TextStyle(
+            fontFamily: 'Pacifico',
+            fontSize: 26,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),

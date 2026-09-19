@@ -109,13 +109,13 @@ class _HomePage extends StatelessWidget {
               bottom: false,
               child: SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: 64,
                 child: Center(
                   child: Text(
                     DirectoryApp.appTitle,
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Pacifico',
+                      fontSize: 26,
                       color: Colors.black,
                     ),
                   ),
