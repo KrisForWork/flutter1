@@ -30,7 +30,7 @@ class _LoadingPageState extends State<LoadingPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.quiz, size: 96, color: Colors.black),
+            const Icon(Icons.menu_book, size: 96, color: Colors.black),
             const SizedBox(height: 16),
             Text(
               TestingCatalog.appTitle,
