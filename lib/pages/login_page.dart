@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../data/auth_store.dart';
+import '../routes.dart';
 import '../widgets/text_field.dart';
-import 'register_page.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -42,7 +42,10 @@ class _LoginPageState extends State<LoginPage> {
     );
     if (error != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      return;
     }
+    if (!context.mounted) return;
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
   }
 
   @override
@@ -130,11 +133,9 @@ class _LoginPageState extends State<LoginPage> {
                               const Text('Нет аккаунта? '),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
+                                  Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const RegisterPage(),
-                                    ),
+                                    AppRoutes.register,
                                   );
                                 },
                                 child: const Text(

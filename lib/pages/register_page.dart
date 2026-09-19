@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../data/auth_store.dart';
+import '../routes.dart';
 import '../widgets/text_field.dart';
-import 'login_page.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -51,17 +51,17 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     if (error != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      return;
     }
+    if (!context.mounted) return;
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
   }
 
   void _openLogin() {
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      Navigator.pushNamed(context, AppRoutes.login);
     }
   }
 

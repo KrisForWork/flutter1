@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../data/auth_store.dart';
+import '../routes.dart';
+import '../widgets/app_bottom_nav.dart';
 import '../widgets/text_field.dart';
 
 void main() {
@@ -135,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() {
     AuthStore.logout();
+    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (_) => false);
   }
 
   @override
@@ -155,9 +158,16 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => Navigator.maybePop(context),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacementNamed(context, AppRoutes.home);
+            }
+          },
         ),
       ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 1),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
