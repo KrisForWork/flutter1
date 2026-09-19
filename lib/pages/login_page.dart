@@ -72,9 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                             const Text(
                               'Добро пожаловать!\nВойдите в свой аккаунт\nИли создайте новый',
                               style: TextStyle(
+                                fontFamily: 'Pacifico',
                                 fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                height: 1.3,
+                                height: 1.4,
                               ),
                             ),
                             const SizedBox(height: 36),
@@ -111,6 +111,10 @@ class _LoginPageState extends State<LoginPage> {
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 40,
                                     vertical: 14,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontFamily: 'Pacifico',
+                                    fontSize: 18,
                                   ),
                                 ),
                                 child: const Text('Войти'),

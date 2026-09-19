@@ -138,6 +138,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   horizontal: 32,
                                   vertical: 14,
                                 ),
+                                textStyle: const TextStyle(
+                                  fontFamily: 'Pacifico',
+                                  fontSize: 18,
+                                ),
                               ),
                               child: const Text('Зарегистрироваться'),
                             ),

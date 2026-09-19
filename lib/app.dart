@@ -135,8 +135,8 @@ class _HomePage extends StatelessWidget {
                     child: Text(
                       DirectoryApp.topicTitle,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Pacifico',
+                        fontSize: 22,
                         color: Colors.black,
                       ),
                     ),

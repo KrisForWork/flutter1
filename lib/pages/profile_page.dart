@@ -236,6 +236,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       horizontal: 40,
                       vertical: 14,
                     ),
+                    textStyle: const TextStyle(
+                      fontFamily: 'Pacifico',
+                      fontSize: 18,
+                    ),
                   ),
                   child: const Text('Сохранить'),
                 ),
@@ -245,8 +249,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: const Text(
                     'Выйти',
                     style: TextStyle(
+                      fontFamily: 'Pacifico',
                       color: Colors.black,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
                     ),
                   ),
                 ),
