@@ -8,6 +8,7 @@ import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
 import '../data/auth_store.dart';
 import '../data/testing_data.dart';
+import '../di/injection.dart';
 import '../models/testing_type.dart';
 import '../routes.dart';
 import '../widgets/app_bottom_nav.dart';
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HomeBloc()..add(LoadHomeEvent()),
+      create: (_) => getIt<HomeBloc>()..add(LoadHomeEvent()),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeError) {

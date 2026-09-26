@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'data/auth_store.dart';
+import 'di/injection.dart';
 import 'models/testing_type.dart';
 import 'pages/detail_page.dart';
 import 'pages/home_page.dart';
@@ -13,6 +14,7 @@ import 'routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   await AuthStore.load();
   runApp(
     DirectoryApp(
