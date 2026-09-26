@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import 'connection/open_connection.dart';
 import 'testing_data.dart';
 
 part 'app_database.g.dart';
@@ -24,7 +19,7 @@ class TestingTypes extends Table {
 @lazySingleton
 @DriftDatabase(tables: [TestingTypes])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase() : super(openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -51,15 +46,4 @@ class AppDatabase extends _$AppDatabase {
       );
     }
   }
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    if (Platform.isAndroid) {
-      await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
-    }
-    final folder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(folder.path, 'testvik.sqlite'));
-    return NativeDatabase(file);
-  });
 }
