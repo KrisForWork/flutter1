@@ -12,6 +12,7 @@ import '../di/injection.dart';
 import '../models/testing_type.dart';
 import '../routes.dart';
 import '../widgets/app_bottom_nav.dart';
+import '../widgets/theme_mode_button.dart';
 import 'profile_page.dart';
 
 bool get _isDesktopOrWeb {
@@ -54,11 +55,10 @@ class _HomeStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEEEEEE),
       body: Center(
         child: message == null
-            ? const CircularProgressIndicator(color: Colors.black)
-            : Text(message!, style: const TextStyle(color: Colors.black)),
+            ? const CircularProgressIndicator()
+            : Text(message!),
       ),
       bottomNavigationBar: const AppBottomNav(currentIndex: 0),
     );
@@ -72,33 +72,40 @@ class _HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFEEEEEE),
       body: Column(
         children: [
           ColoredBox(
-            color: Colors.white,
+            color:
+                theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
             child: SafeArea(
               bottom: false,
               child: SizedBox(
                 width: double.infinity,
                 height: 64,
-                child: Center(
-                  child: Text(
-                    appTitle,
-                    style: const TextStyle(
-                      fontFamily: 'Pacifico',
-                      fontSize: 26,
-                      color: Colors.black,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Text(
+                      appTitle,
+                      style: const TextStyle(
+                        fontFamily: 'Pacifico',
+                        fontSize: 26,
+                      ),
                     ),
-                  ),
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: ThemeModeButton(),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
           Expanded(
             child: ColoredBox(
-              color: const Color(0xFFEEEEEE),
+              color: theme.scaffoldBackgroundColor,
               child: Column(
                 children: [
                   const SizedBox(height: 16),
@@ -110,7 +117,6 @@ class _HomeView extends StatelessWidget {
                         style: const TextStyle(
                           fontFamily: 'Pacifico',
                           fontSize: 22,
-                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -121,7 +127,7 @@ class _HomeView extends StatelessWidget {
                     child: _InfoBox(
                       child: Text(
                         items.map((item) => item.name).join(' · '),
-                        style: const TextStyle(fontSize: 14, color: Colors.black),
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ),
                   ),
@@ -131,11 +137,7 @@ class _HomeView extends StatelessWidget {
                     child: _InfoBox(
                       child: Text(
                         topicDescription,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          height: 1.35,
-                        ),
+                        style: const TextStyle(fontSize: 14, height: 1.35),
                       ),
                     ),
                   ),
@@ -153,7 +155,8 @@ class _HomeView extends StatelessWidget {
             ),
           ),
           ColoredBox(
-            color: Colors.white,
+            color:
+                theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
             child: InkWell(
               onTap: () => Navigator.pushNamed(context, AppRoutes.profile),
               child: Padding(
@@ -165,10 +168,7 @@ class _HomeView extends StatelessWidget {
                   children: [
                     ValueListenableBuilder<AppUser?>(
                       valueListenable: AuthStore.session,
-                      builder: (_, user, _) => UserAvatar(
-                        size: 48,
-                        user: user,
-                      ),
+                      builder: (_, user, _) => UserAvatar(size: 48, user: user),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -184,7 +184,6 @@ class _HomeView extends StatelessWidget {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Colors.black,
                                 ),
                               );
                             },
@@ -192,7 +191,7 @@ class _HomeView extends StatelessWidget {
                           const SizedBox(height: 2),
                           const Text(
                             'Группа ${HomePage.studentGroup}',
-                            style: TextStyle(fontSize: 13, color: Colors.black),
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -258,25 +257,20 @@ class _TestingTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
         isThreeLine: true,
-        leading: Icon(item.iconData, color: Colors.black),
+        leading: Icon(item.iconData),
         title: Text(
           item.name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           item.shortDescription,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: Colors.black87),
         ),
         onTap: () {
           Navigator.pushNamed(context, AppRoutes.detail, arguments: item);
@@ -332,11 +326,11 @@ class _HorizontalImagesState extends State<_HorizontalImages> {
                 images[index],
                 width: 200,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => const ColoredBox(
-                  color: Color(0xFFEEEEEE),
-                  child: SizedBox(
+                errorBuilder: (_, _, _) => ColoredBox(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: const SizedBox(
                     width: 200,
-                    child: Icon(Icons.image_not_supported, color: Colors.black),
+                    child: Icon(Icons.image_not_supported),
                   ),
                 ),
               ),
@@ -359,7 +353,7 @@ class _InfoBox extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(16),
       ),
       child: child,

@@ -10,10 +10,11 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foreground = Theme.of(context).appBarTheme.foregroundColor;
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      selectedItemColor: Colors.black,
-      unselectedItemColor: Colors.black54,
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      selectedItemColor: foreground,
+      unselectedItemColor: foreground?.withValues(alpha: 0.54),
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
       onTap: (index) {
@@ -23,14 +24,8 @@ class AppBottomNav extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(context, target, (route) => false);
       },
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Главная',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Профиль',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Главная'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Профиль'),
       ],
     );
   }

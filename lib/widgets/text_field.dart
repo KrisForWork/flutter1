@@ -84,6 +84,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final iconColor = theme.iconTheme.color ?? Colors.black;
     return TextFormField(
       controller: widget.controller,
       focusNode: widget.focusNode,
@@ -106,7 +108,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hint,
         hintMaxLines: 1,
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        prefixIcon: Icon(_prefixIcon, color: Colors.black54),
+        prefixIcon: Icon(_prefixIcon, color: iconColor),
         suffixIcon: _isPassword
             ? IconButton(
                 onPressed: () => setState(() => _obscure = !_obscure),
@@ -114,7 +116,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   _obscure
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: Colors.black54,
+                  color: iconColor,
                 ),
               )
             : null,
@@ -124,10 +126,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         errorMaxLines: 2,
         filled: true,
-        fillColor: Colors.white,
-        border: _border(),
-        enabledBorder: _border(),
-        focusedBorder: _border(),
+        fillColor: theme.colorScheme.surface,
+        border: _border(color: iconColor),
+        enabledBorder: _border(color: iconColor),
+        focusedBorder: _border(color: iconColor),
         errorBorder: _border(color: Colors.red),
         focusedErrorBorder: _border(color: Colors.red),
       ),

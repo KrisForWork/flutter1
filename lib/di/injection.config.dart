@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:test1/bloc/home_bloc.dart' as _i494;
+import 'package:test1/cubit/theme_cubit.dart' as _i321;
 import 'package:test1/data/app_database.dart' as _i777;
 import 'package:test1/data/testing_repository.dart' as _i946;
 
@@ -26,6 +27,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i946.TestingRepository>(
       () => _i946.TestingRepository(gh<_i777.AppDatabase>()),
     );
+    gh.lazySingleton<_i321.ThemeCubit>(() => _i321.ThemeCubit());
     gh.factory<_i494.HomeBloc>(
       () => _i494.HomeBloc(gh<_i946.TestingRepository>()),
     );

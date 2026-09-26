@@ -5,10 +5,9 @@ import '../routes.dart';
 import '../widgets/text_field.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: RegisterPage(),
-  ));
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: RegisterPage()),
+  );
 }
 
 class RegisterPage extends StatefulWidget {
@@ -50,7 +49,9 @@ class _RegisterPageState extends State<RegisterPage> {
       password: _passwordController.text,
     );
     if (error != null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
     if (!context.mounted) return;
@@ -68,7 +69,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -131,9 +131,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             ElevatedButton(
                               onPressed: _submit,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
-                                shape: const StadiumBorder(),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 32,
                                   vertical: 14,

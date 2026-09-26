@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/testing_type.dart';
 import '../widgets/app_bottom_nav.dart';
+import '../widgets/theme_mode_button.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key, required this.item});
@@ -10,11 +11,9 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFEEEEEE),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -23,12 +22,9 @@ class DetailPage extends StatelessWidget {
         ),
         title: Text(
           item.name,
-          style: const TextStyle(
-            fontFamily: 'Pacifico',
-            fontSize: 22,
-            color: Colors.black,
-          ),
+          style: const TextStyle(fontFamily: 'Pacifico', fontSize: 22),
         ),
+        actions: const [ThemeModeButton()],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -56,16 +52,12 @@ class DetailPage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardTheme.color,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 item.detailedDescription,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.45,
-                  color: Colors.black,
-                ),
+                style: const TextStyle(fontSize: 15, height: 1.45),
               ),
             ),
           ],
@@ -81,11 +73,10 @@ class _ImageFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ColoredBox(
-      color: Colors.white,
-      child: Center(
-        child: Icon(Icons.image_not_supported, color: Colors.black, size: 48),
-      ),
+    final theme = Theme.of(context);
+    return ColoredBox(
+      color: theme.cardTheme.color ?? theme.colorScheme.surface,
+      child: const Center(child: Icon(Icons.image_not_supported, size: 48)),
     );
   }
 }

@@ -25,20 +25,15 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.menu_book, size: 96, color: Colors.black),
+            const Icon(Icons.menu_book, size: 96),
             const SizedBox(height: 16),
             Text(
               appTitle,
-              style: const TextStyle(
-                fontFamily: 'Pacifico',
-                fontSize: 36,
-                color: Colors.black,
-              ),
+              style: const TextStyle(fontFamily: 'Pacifico', fontSize: 36),
             ),
           ],
         ),

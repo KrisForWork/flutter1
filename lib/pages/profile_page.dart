@@ -1,18 +1,29 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../app_themes.dart';
+import '../cubit/theme_cubit.dart';
 import '../data/auth_store.dart';
 import '../routes.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/text_field.dart';
+import '../widgets/theme_mode_button.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ProfilePage(),
-  ));
+  runApp(
+    BlocProvider(
+      create: (_) => ThemeCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.light,
+        darkTheme: AppThemes.dark,
+        home: const ProfilePage(),
+      ),
+    ),
+  );
 }
 
 class UserAvatar extends StatelessWidget {
@@ -88,9 +99,9 @@ class _ProfilePageState extends State<ProfilePage> {
       email: _emailController.text,
       password: _passwordController.text,
     );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Профиль сохранён')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Профиль сохранён')));
   }
 
   Future<void> _changePhoto() async {
@@ -129,9 +140,9 @@ class _ProfilePageState extends State<ProfilePage> {
       AuthStore.updatePhoto(base64Encode(bytes));
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Не удалось выбрать фото')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Не удалось выбрать фото')));
     }
   }
 
@@ -143,19 +154,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
         title: const Text(
           'Профиль',
-          style: TextStyle(
-            fontFamily: 'Pacifico',
-            fontSize: 26,
-          ),
+          style: TextStyle(fontFamily: 'Pacifico', fontSize: 26),
         ),
+        actions: const [ThemeModeButton()],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -185,10 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         ValueListenableBuilder<AppUser?>(
                           valueListenable: AuthStore.session,
-                          builder: (_, user, _) => UserAvatar(
-                            size: 128,
-                            user: user,
-                          ),
+                          builder: (_, user, _) =>
+                              UserAvatar(size: 128, user: user),
                         ),
                         const CircleAvatar(
                           radius: 18,
@@ -239,9 +243,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ElevatedButton(
                   onPressed: _submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    shape: const StadiumBorder(),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 40,
                       vertical: 14,
@@ -258,11 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: _logout,
                   child: const Text(
                     'Выйти',
-                    style: TextStyle(
-                      fontFamily: 'Pacifico',
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
+                    style: TextStyle(fontFamily: 'Pacifico', fontSize: 18),
                   ),
                 ),
               ],

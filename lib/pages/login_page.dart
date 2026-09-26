@@ -5,10 +5,9 @@ import '../routes.dart';
 import '../widgets/text_field.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: LoginPage(),
-  ));
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginPage()),
+  );
 }
 
 class LoginPage extends StatefulWidget {
@@ -41,7 +40,9 @@ class _LoginPageState extends State<LoginPage> {
       password: _passwordController.text,
     );
     if (error != null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
     if (!context.mounted) return;
@@ -51,7 +52,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -108,9 +108,6 @@ class _LoginPageState extends State<LoginPage> {
                               child: ElevatedButton(
                                 onPressed: _submit,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black,
-                                  foregroundColor: Colors.white,
-                                  shape: const StadiumBorder(),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 40,
                                     vertical: 14,
