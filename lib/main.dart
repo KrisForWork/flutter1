@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'data/auth_store.dart';
-import 'data/testing_catalog.dart';
+import 'models/testing_type.dart';
 import 'pages/detail_page.dart';
 import 'pages/home_page.dart';
 import 'pages/loading_page.dart';
@@ -14,7 +14,6 @@ import 'routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AuthStore.load();
-  await TestingCatalog.load();
   runApp(
     DirectoryApp(
       routes: {

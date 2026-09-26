@@ -1,9 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
+import '../bloc/home_state.dart';
 import '../data/auth_store.dart';
-import '../data/testing_catalog.dart';
+import '../data/testing_data.dart';
+import '../models/testing_type.dart';
 import '../routes.dart';
 import '../widgets/app_bottom_nav.dart';
 import 'profile_page.dart';
@@ -23,6 +28,49 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => HomeBloc()..add(LoadHomeEvent()),
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          if (state is HomeError) {
+            return _HomeStatus(message: state.message);
+          }
+          if (state is! HomeLoaded) {
+            return const _HomeStatus();
+          }
+          return _HomeView(items: state.items);
+        },
+      ),
+    );
+  }
+}
+
+class _HomeStatus extends StatelessWidget {
+  const _HomeStatus({this.message});
+
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFEEEEEE),
+      body: Center(
+        child: message == null
+            ? const CircularProgressIndicator(color: Colors.black)
+            : Text(message!, style: const TextStyle(color: Colors.black)),
+      ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 0),
+    );
+  }
+}
+
+class _HomeView extends StatelessWidget {
+  const _HomeView({required this.items});
+
+  final List<TestingType> items;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEEEEEE),
       body: Column(
@@ -36,7 +84,7 @@ class HomePage extends StatelessWidget {
                 height: 64,
                 child: Center(
                   child: Text(
-                    TestingCatalog.appTitle,
+                    appTitle,
                     style: const TextStyle(
                       fontFamily: 'Pacifico',
                       fontSize: 26,
@@ -57,7 +105,7 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _InfoBox(
                       child: Text(
-                        TestingCatalog.topicTitle,
+                        topicTitle,
                         style: const TextStyle(
                           fontFamily: 'Pacifico',
                           fontSize: 22,
@@ -71,7 +119,7 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _InfoBox(
                       child: Text(
-                        TestingCatalog.items.map((item) => item.name).join(' · '),
+                        items.map((item) => item.name).join(' · '),
                         style: const TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ),
@@ -81,7 +129,7 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _InfoBox(
                       child: Text(
-                        TestingCatalog.topicDescription,
+                        topicDescription,
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black,
@@ -91,9 +139,14 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const SizedBox(height: 140, child: _HorizontalImages()),
+                  SizedBox(
+                    height: 140,
+                    child: _HorizontalImages(
+                      images: items.map((item) => item.image).toList(),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  const Expanded(child: _TestingItemsView()),
+                  Expanded(child: _TestingItemsView(items: items)),
                 ],
               ),
             ),
@@ -156,11 +209,12 @@ class HomePage extends StatelessWidget {
 }
 
 class _TestingItemsView extends StatelessWidget {
-  const _TestingItemsView();
+  const _TestingItemsView({required this.items});
+
+  final List<TestingType> items;
 
   @override
   Widget build(BuildContext context) {
-    final items = TestingCatalog.items;
     final verticalGap = _isDesktopOrWeb ? 16.0 : 8.0;
 
     return LayoutBuilder(
@@ -232,7 +286,9 @@ class _TestingTypeCard extends StatelessWidget {
 }
 
 class _HorizontalImages extends StatefulWidget {
-  const _HorizontalImages();
+  const _HorizontalImages({required this.images});
+
+  final List<String> images;
 
   @override
   State<_HorizontalImages> createState() => _HorizontalImagesState();
@@ -249,7 +305,7 @@ class _HorizontalImagesState extends State<_HorizontalImages> {
 
   @override
   Widget build(BuildContext context) {
-    final images = TestingCatalog.items.map((item) => item.image).toList();
+    final images = widget.images;
     return Listener(
       onPointerSignal: (event) {
         if (event is! PointerScrollEvent || !_controller.hasClients) return;

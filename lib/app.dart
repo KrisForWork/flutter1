@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'data/testing_catalog.dart';
+import 'data/testing_data.dart';
+import 'models/testing_type.dart';
 import 'pages/detail_page.dart';
 import 'routes.dart';
 
@@ -18,7 +19,7 @@ class DirectoryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: TestingCatalog.appTitle,
+      title: appTitle,
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/testing_catalog.dart';
+import '../models/testing_type.dart';
 import '../widgets/app_bottom_nav.dart';
 
 class DetailPage extends StatelessWidget {

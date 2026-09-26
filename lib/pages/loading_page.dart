@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/auth_store.dart';
-import '../data/testing_catalog.dart';
+import '../data/testing_data.dart';
 import '../routes.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _LoadingPageState extends State<LoadingPage> {
             const Icon(Icons.menu_book, size: 96, color: Colors.black),
             const SizedBox(height: 16),
             Text(
-              TestingCatalog.appTitle,
+              appTitle,
               style: const TextStyle(
                 fontFamily: 'Pacifico',
                 fontSize: 36,
